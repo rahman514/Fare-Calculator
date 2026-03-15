@@ -18,11 +18,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* background: linear-gradient(135deg, #1e3c72, #2a5298); */
             background: url('04.jpg') no-repeat center center;
             background-size: cover;
-            background-attachment: fixed; /* স্ক্রল করলে background ঠিক থাকবে */
-            /* optional: overlay color দিয়ে text পড়া সহজ করতে */
+            background-attachment: fixed;
             position: relative;
         }
 
@@ -46,11 +44,38 @@
             margin-bottom: 15px;
         }
 
-        .input-group label {
-            display: block;
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 5px;
+        }
+
+        .input-group label {
             font-weight: 500;
             color: #333;
+        }
+
+        /* Help Button Style */
+        .info-btn {
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .info-btn:hover {
+            background: #1e3c72;
+            transform: scale(1.1);
         }
 
         .input-group input {
@@ -91,11 +116,6 @@
             font-weight: 500;
         }
 
-        @media (max-width: 500px) {
-            .card {
-                padding: 25px;
-            }
-        }
         .footer {
             position: fixed;
             bottom: 0;
@@ -106,8 +126,7 @@
             text-align: center;
             padding: 12px 0;
             font-size: 14px;
-            letter-spacing: 0.5px;
-}
+        }
     </style>
 </head>
 <body>
@@ -126,8 +145,16 @@
     </div>
 
     <div class="input-group">
-        <label>IATA Commission (%)</label>
+        <div class="label-container">
+            <label>IATA Commission (%)</label>
+            <a href="https://raw.githubusercontent.com/khmominur/Fare-Calculator/refs/heads/main/Commission.jpeg" target="_blank" class="info-btn" title="View Commission Info">?</a>
+        </div>
         <input type="number" id="iata_com" placeholder="Enter Commission %">
+    </div>
+
+    <div class="input-group">
+        <label>Markup Amount</label>
+        <input type="number" id="markup_amount" placeholder="Optional Markup">
     </div>
 
     <button class="btn" onclick="calculateFare()">Calculate</button>
@@ -148,15 +175,18 @@
         let gross_fare = parseFloat(document.getElementById('gross_fare').value);
         let base_fare = parseFloat(document.getElementById('base_fare').value);
         let iata_com = parseFloat(document.getElementById('iata_com').value);
+        
+        let markup_input = document.getElementById('markup_amount').value;
+        let markup = markup_input === "" ? 0 : parseFloat(markup_input);
 
         if (isNaN(gross_fare) || isNaN(base_fare) || isNaN(iata_com)) {
-            alert("Please enter all values correctly.");
+            alert("Please enter all required values correctly.");
             return;
         }
 
         let AIT = (gross_fare * 0.3) / 100;
         let IATA_Commission = (base_fare * iata_com) / 100;
-        let net_fare = gross_fare + AIT - IATA_Commission;
+        let net_fare = (gross_fare + AIT - IATA_Commission) + markup;
 
         document.getElementById('ait').innerText = "AIT: " + AIT.toFixed(2);
         document.getElementById('iata').innerText = "IATA Commission: " + IATA_Commission.toFixed(2);
