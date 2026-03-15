@@ -18,6 +18,7 @@ It provides a clean interface with aviation-themed design for practical use in t
 
 - HTML5
 - CSS3
+- javaScript
 
 
 ## 💻 How to Use
